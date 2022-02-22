@@ -1,7 +1,5 @@
 import TODO from './todoList.js';
-import {
-  form,
-} from './elements.js';
+import { form } from './elements.js';
 
 import { appendTodoList, removeChildNodes } from './appendToDoList.js';
 
@@ -51,8 +49,7 @@ eventHandler('click', '.bi-three-dots-vertical', (event) => {
   const desc = parentNode.querySelector('.description');
   desc.contentEditable = true;
   desc.focus();
-  desc.style.border = '2px solid #bfcaca';
-  desc.style.borderRadius = '5px';
+  desc.classList.add('focus');
   editButton.style.display = 'none';
   deleteButton.style.display = 'block';
 });
@@ -109,42 +106,26 @@ eventHandler('mouseover', '.bi-trash', (e) => {
   e.target.style.color = '#ee0000';
 });
 
-const description = document.querySelectorAll('.description');
+const updateAndRevertEditMode = (e) => {
+  const { parentNode } = e.target.parentNode;
+  const { id } = parentNode;
+  let val = e.target.innerText;
+  const btnD = parentNode.querySelector('.btn-delete');
+  const btnE = parentNode.querySelector('.btn-edit');
+  e.target.classList.remove('focus');
+  e.target.blur();
+  e.target.contentEditable = false;
+  val = val.substring(0, val.length - 1);
+  newTodo.updateDescription(val, id);
+  btnD.style.display = 'none';
+  btnE.style.display = 'block';
+};
 
-description.forEach((element, index) => {
-  if (element.contentEditable) {
-    element.classList.add('editable');
-    const { id } = element.parentNode;
-    let { innerText: val } = element.parentNode.querySelector('.status');
-
-    element.addEventListener('input', () => {
-      val = element.innerText;
-
-      setTimeout(() => {
-        const btnD = document.querySelectorAll('.btn-delete');
-        const btnE = document.querySelectorAll('.btn-edit');
-        newTodo.updateDescription(val, id);
-        btnD[index].style.display = 'none';
-        btnE[index].style.display = 'block';
-        element.style.border = '2px solid #161b40';
-        element.blur();
-        element.contentEditable = false;
-      }, 5000);
-    });
-  }
-});
 eventHandler('keypress', '.description', (e) => {
   if (e.key === 'Enter') {
-    const { id, parentNode } = e.target.parentNode;
-    const btnD = parentNode.querySelector('.btn-delete');
-    const btnE = parentNode.querySelector('.btn-edit');
-    e.target.style.border = '2px solid #161b40';
-    e.target.blur();
-    e.target.contentEditable = false;
-    let val = e.target.innerText;
-    val = val.substring(0, val.length - 1);
-    newTodo.updateDescription(val, id);
-    btnD.style.display = 'none';
-    btnE.style.display = 'block';
+    updateAndRevertEditMode(e);
   }
+  // setTimeout(() => {
+  //   updateAndRevertEditMode(e);
+  // }, 3000);
 });

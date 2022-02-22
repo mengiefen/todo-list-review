@@ -11,7 +11,13 @@ const createTodoListRow = (todoItem) => {
   const rowElements = document.createElement('div');
   const rowHolder = document.createElement('div');
 
-  const names = [
+  const addChild = (parent, children) => {
+    children.forEach((child) => {
+      parent.appendChild(child);
+    });
+  };
+
+  const nameList = [
     rowLeft,
     todoInputCheckBox,
     todoPara,
@@ -34,15 +40,16 @@ const createTodoListRow = (todoItem) => {
     'row-elements',
     'todo-list-row',
   ];
+  const nameList2 = [btnEdit, btnDelete, iconThreeDots, iconTrash];
+  const classNames2 = ['btn-edit', 'btn-delete', 'bi-three-dots-vertical', 'bi-trash'];
 
-  names.forEach((name, index) => {
+  nameList.forEach((name, index) => {
     name.classList.add(classNames[index]);
   });
 
-  btnEdit.classList.add('btn-edit');
-  btnDelete.classList.add('btn-delete');
-  iconThreeDots.classList.add('bi-three-dots-vertical');
-  iconTrash.classList.add('bi-trash');
+  nameList2.forEach((name, index) => {
+    name.classList.add(classNames2[index]);
+  });
 
   if (todoItem.completed) {
     todoPara.classList.add('strike-through');
@@ -60,18 +67,14 @@ const createTodoListRow = (todoItem) => {
     todoInputCheckBox.checked = false;
   }
 
-  rowLeft.appendChild(todoInputCheckBox);
-  rowLeft.appendChild(todoPara);
-
-  btnEdit.appendChild(iconThreeDots);
-  btnDelete.appendChild(iconTrash);
-
-  rowElements.appendChild(rowLeft);
-  rowElements.appendChild(btnEdit);
-  rowElements.appendChild(btnDelete);
+  addChild(rowLeft, [todoInputCheckBox, todoPara]);
+  addChild(btnDelete, [iconTrash]);
+  addChild(btnEdit, [iconThreeDots]);
+  addChild(rowElements, [rowLeft, btnEdit, btnDelete]);
   rowElements.setAttribute('id', todoItem.index);
   rowElements.draggable = true;
-  rowHolder.appendChild(rowElements);
+
+  addChild(rowHolder, [rowElements]);
   rowHolder.setAttribute('data-id', todoItem.index);
   return rowHolder;
 };
