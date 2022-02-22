@@ -81,6 +81,7 @@ eventHandler('dragover', '.row-elements', (e) => {
 });
 
 eventHandler('drop', '.row-elements', (e) => {
+  e.preventDefault();
   const end = +e.target.parentNode.getAttribute('data-id');
   handleSwap(dragIndex, end);
   e.target.classList.remove('over');
@@ -125,7 +126,4 @@ eventHandler('keypress', '.description', (e) => {
   if (e.key === 'Enter') {
     updateAndRevertEditMode(e);
   }
-  // setTimeout(() => {
-  //   updateAndRevertEditMode(e);
-  // }, 3000);
 });
